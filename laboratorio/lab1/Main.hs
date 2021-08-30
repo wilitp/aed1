@@ -1,0 +1,123 @@
+-- Ejercicio 1
+
+-- a
+esCero :: Int -> Bool
+esCero = (==0)
+
+-- b
+esPositivo :: Int -> Bool
+esPositivo = (>=0)
+
+-- c
+esVocal :: Char -> Bool
+esVocal x = x `elem` "aeiouáéíóúüAEIOUÁÉÍÓÚ"
+
+-- Ejercicio 2
+
+
+-- a
+paraTodo :: [Bool] -> Bool
+paraTodo [] = True
+paraTodo (x:xs) = x && paraTodo xs
+
+-- b
+sumatoria :: [Int] -> Int
+sumatoria = sum
+
+-- c
+productoria :: [Int] -> Int
+productoria = product
+
+-- d
+factorial :: Int -> Int
+factorial 0 = 1
+factorial n = n * factorial n-1
+
+-- e
+promedio :: [Int] -> Int
+promedio xs = sumatoria xs `div` length xs 
+
+-- promedio' :: [Int] -> Int
+promedio' :: [Int] -> Int
+promedio' = (div . sumatoria) <*> length -- version point-free que aun no entiendo
+
+-- Ejercicio 3
+
+pertenece :: Int -> [Int] -> Bool
+
+pertenece _ [] = False
+
+pertenece n (x:xs) = n == x || pertenece n xs 
+
+-- Ejercicio 4
+
+-- a
+paraTodo' :: [a] -> (a -> Bool) -> Bool
+paraTodo' [] _ = True
+paraTodo' (x:xs) f = f x && paraTodo' xs f
+
+-- b
+existe' :: [a] -> (a -> Bool) -> Bool
+existe' [] _ = False
+existe' (x:xs) f = f x || existe' xs f
+
+--c 
+sumatoria' :: [a] -> (a->Int) -> Int
+sumatoria' [] _ = 0
+sumatoria' (x:xs) f = f x + sumatoria' xs f
+
+--d 
+productoria' :: [a] -> (a -> Int) -> Int
+productoria' [] _ = 1
+productoria' (x:xs) f = f x * productoria' xs f
+
+
+-- Ejercicio 5
+
+paratodo :: [Bool] -> Bool
+paratodo xs = paraTodo' xs (==True)
+
+-- Ejercicio 6
+
+-- Revertí el orden de los argumentos en algunas funciones
+-- para hacer más fácil escribir las del enunciado en forma point-free
+
+reverseParaTodo' :: (a -> Bool) -> [a] -> Bool
+reverseParaTodo' f xs = paraTodo' xs f
+
+reverseExiste' :: (a -> Bool) -> [a] -> Bool
+reverseExiste' f xs = existe' xs f
+
+reverseSumatoria' :: (Int -> Int) -> [Int] -> Int
+reverseSumatoria' f xs = sumatoria' xs f
+
+reverseMod :: Integral a => a -> a -> a
+reverseMod a b = mod b a 
+
+-- a
+
+todosPares :: [Int] -> Bool
+todosPares = reverseParaTodo' ((==0) . reverseMod 2)
+
+-- b
+hayMultiplo :: Int -> [Int] -> Bool
+hayMultiplo n = reverseExiste' ((==0) . reverseMod n)
+
+-- c 
+cuadrado :: Int -> Int
+cuadrado n = n*n 
+
+rango :: Int -> Int -> [Int]
+rango n m = [n..m]
+
+sumaCuadrados :: Int -> Int
+sumaCuadrados = reverseSumatoria' cuadrado . rango 1
+
+-- d
+factorial' :: Int -> Int -> Int
+factorial' n m = productoria (rango n m)
+
+-- e 
+multiplicaPares :: [Int] -> Int
+multiplicaPares = productoria . filter even 
+
