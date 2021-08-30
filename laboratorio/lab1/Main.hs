@@ -114,10 +114,77 @@ sumaCuadrados :: Int -> Int
 sumaCuadrados = reverseSumatoria' cuadrado . rango 1
 
 -- d
-factorial' :: Int -> Int -> Int
-factorial' n m = productoria (rango n m)
+factorial' :: Int -> Int
+factorial' = productoria . rango 1
 
 -- e 
 multiplicaPares :: [Int] -> Int
 multiplicaPares = productoria . filter even 
 
+-- Ejercicio 8 Programá una función que dada una lista de números xs, devuelve la lista que resulta de duplicar cada valor de xs.
+
+-- a) Definila usando recursión
+
+duplicaLista :: [Int] -> [Int]
+-- duplicaLista [] = []
+-- duplicaLista (x:xs) = 2*x : duplicaLista xs
+
+-- b) Definila usando recursión
+duplicaLista = map (*2)
+
+-- Ejercicio 9 Programá una función que dada una lista de números xs, calcula una lista que tiene como elementos aquellos números de xs que son pares.
+
+-- a) Definila usando recursión
+soloPares :: [Int] -> [Int]
+
+-- soloPares [] = True
+-- soloPares (x:xs) = even x && soloPares xs
+
+-- b) Definila usando filter
+
+soloPares = filter even
+
+-- c) Revisá tu definicón del ejercicio 6e. ¿Cómo podés mejorarla?
+
+-- Ya había usado filter :) Pero alguna forma mejor debe haber
+
+-- Ejercicio 10 La función primIgualesA toma un valor y una lista, y cualcula el tramo inicial más largo de la lista cuyos elementos son iguales a ese valor. Por ejemplo:
+
+-- primIgualesA 3 [3,3,4,1] = [3,3]
+-- primIgualesA 3 [4,3,3,4,1] = []
+-- primIgualesA 3 [] = []
+-- primIgualesA 'a' "aaadaa" = "aaa"
+
+-- a) Programá primIgualesA por recursión.
+
+primIgualesA :: Eq a => a -> [a] -> [a]
+
+-- Versión recursiva comentada
+primIgualesA _ [] = []
+primIgualesA y (x:xs) | y == x = x : primIgualesA y xs
+                      | otherwise = []
+
+-- b) Programá nuevamente la función utilizando takeWhile
+-- Versión con takeWhile
+-- primIgualesA y = takeWhile (==y) 
+
+-- Ejercicio 11 primIguales toma una lista y devuelve el mayor tramo inicial de la lista cuyos elementos son iguales.
+
+-- primIguales [3,3,4,1] = [3,3]
+-- primIguales [4,3,3,4,1] = [4]
+-- primIguales [] = []
+-- primIguales "aaadaa" = "aaa"
+
+-- a) Programá primIguales por recursión
+
+primIguales :: Eq a => [a] -> [a]
+
+-- Versión recursiva comentada
+-- primIguales [] = []
+-- primIguales (x:xs) | x == head xs = x : primIguales xs
+--                    | otherwise = x : primIguales xs
+
+-- primIguales xs = primIgualesA (head xs) xs
+headEq :: Eq a => [a] -> a
+headEq = head
+primIguales = (primIgualesA . head) <*> id
