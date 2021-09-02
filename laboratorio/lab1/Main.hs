@@ -160,13 +160,13 @@ soloPares = filter even
 primIgualesA :: Eq a => a -> [a] -> [a]
 
 -- Versión recursiva comentada
-primIgualesA _ [] = []
-primIgualesA y (x:xs) | y == x = x : primIgualesA y xs
-                      | otherwise = []
+-- primIgualesA _ [] = []
+-- primIgualesA y (x:xs) | y == x = x : primIgualesA y xs
+--                       | otherwise = []
 
 -- b) Programá nuevamente la función utilizando takeWhile
 -- Versión con takeWhile
--- primIgualesA y = takeWhile (==y) 
+primIgualesA y = takeWhile (==y) 
 
 -- Ejercicio 11 primIguales toma una lista y devuelve el mayor tramo inicial de la lista cuyos elementos son iguales.
 
@@ -182,9 +182,7 @@ primIguales :: Eq a => [a] -> [a]
 -- Versión recursiva comentada
 -- primIguales [] = []
 -- primIguales (x:xs) | x == head xs = x : primIguales xs
---                    | otherwise = x : primIguales xs
+--                    | otherwise = x : []
 
 -- primIguales xs = primIgualesA (head xs) xs
-headEq :: Eq a => [a] -> a
-headEq = head
 primIguales = (primIgualesA . head) <*> id
