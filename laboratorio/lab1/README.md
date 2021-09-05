@@ -130,7 +130,7 @@ f :: (a, b) -> c
 
 -- c)
 f :: a -> b
--- No es posible dar una definición, ya que no tenemos información sobre el tipo c
+-- No es posible dar una definición, ya que no tenemos información sobre el tipo b
 
 --d)
 f :: (a -> b) -> a -> b
