@@ -37,9 +37,9 @@ factorial n = n * factorial n-1
 promedio :: [Int] -> Int
 promedio xs = sumatoria xs `div` length xs 
 
--- promedio' :: [Int] -> Int
+-- Versión pointfree
 promedio' :: [Int] -> Int
-promedio' = (div . sumatoria) <*> length -- version point-free que aun no entiendo
+promedio' = (div . sumatoria) <*> length
 
 -- Ejercicio 3
 
@@ -186,3 +186,4 @@ primIguales :: Eq a => [a] -> [a]
 
 -- primIguales xs = primIgualesA (head xs) xs
 primIguales = (primIgualesA . head) <*> id
+
