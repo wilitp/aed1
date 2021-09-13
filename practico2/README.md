@@ -43,7 +43,7 @@ Caso inductivo:
 <Sum i : 0 <= i < #(k:ks) : (k:ks)!!i> = k + <Sum i : 0 <= i < #ks : ks!!i>
 ```
 
-# 2. A partir de las siguientes especificaciones, dar el tipo de cada funci´on y derivar las soluciones algorítmicas correspondientes.
+# 2. A partir de las siguientes especificaciones, dar el tipo de cada función y derivar las soluciones algorítmicas correspondientes.
 
 **a)**
 ```noop
@@ -106,6 +106,44 @@ k*k + sum_cuad ks
 ```noop
 iga e xs = <Ai : 0 <= i < #xs : xs!i = e>
 ```
+
+
+### Derivación por inducción sobre xs
+
+**Caso Base**
+```noop
+iga e [] 
+
+={Esp}
+
+<Ai : 0 <= i < #[] : []!i = e>
+
+={Lógica}
+
+<Ai : False : []!i = e>
+
+={Rango vacio}
+
+True
+```
+
+**Caso recursivo**
+
+
+**HI**
+```noop
+iga e ks = <Ai : 0 <= i < #ks : ks!i = e>
+```
+
+**Caso inductivo**
+
+```noop
+iga e (k:ks)
+<Ai : 0 <= i < #(k:ks) : (k:ks)!i = e>
+
+={}
+```
+
 
 **d)**
 
