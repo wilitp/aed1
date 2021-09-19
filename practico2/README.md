@@ -10,7 +10,7 @@ a) ¿Que hace esta función?
 - Suma todos los elementos de una lista.
 b) Escriba una especificación de la función con una expresión cuantificada.
 
-```noop
+```haskell
 <Sum i : 0<= i < #xs : xs!!i>
 ```
 
@@ -20,20 +20,20 @@ Inducción
 
 Caso base:
 
-```noop
+```haskell
 <Sum i : 0<= i < #[] : []!!i>
 <Sum i : false <: []!!i> = 0 = sum []
 ```
 
 Hipótesis:
 
-```noop
+```haskell
 <Sum i : 0<= i < #ks : ks!!i> = sum ks
 ```
 
 Caso inductivo:
 
-```noop
+```haskell
 <Sum i : 0 <= i < #(k:ks) : (k:ks)!!i> = sum k:ks
 ={Caso recursivo de sum}
 <Sum i : 0 <= i < #(k:ks) : (k:ks)!!i> = k + sum ks
@@ -46,7 +46,7 @@ Caso inductivo:
 # 2. A partir de las siguientes especificaciones, dar el tipo de cada función y derivar las soluciones algorítmicas correspondientes.
 
 **a)**
-```noop
+```haskell
 a) sum_cuad xs = <Sum i : 0 ≤ i < #xs : xs!!i * xs!!i>
 ```
 
@@ -54,7 +54,7 @@ a) sum_cuad xs = <Sum i : 0 ≤ i < #xs : xs!!i * xs!!i>
 
 **Caso base**
 
-```noop
+```haskell
 sum_cuad [] = <Sum i : 0 ≤ i < #[] : []!!i * []!!i>
 
 sum_cuad [] = <Sum i : false : []!!i * []!!i>
@@ -63,13 +63,13 @@ sum_cuad [] = 0
 
 **Hipotesis**
 
-```noop
+```haskell
 sum_cuad ks = <Sum i : 0 ≤ i < #ks : ks!!i * ks!!i>
 ```
 
 **Caso inductivo**
 
-```noop
+```haskell
 sum_cuad (k:ks) = <Sum i : 0 ≤ i < #(k:ks) : (k:ks)!!i * (k:ks)!!i>
 
 ={Lógica}
@@ -103,7 +103,7 @@ k*k + sum_cuad ks
 
 **b)**
 
-```noop
+```haskell
 iga e xs = <Ai : 0 <= i < #xs : xs!i = e>
 ```
 
@@ -111,7 +111,7 @@ iga e xs = <Ai : 0 <= i < #xs : xs!i = e>
 ### Derivación por inducción sobre xs
 
 **Caso Base**
-```noop
+```haskell
 iga e [] 
 
 ={Esp}
@@ -131,13 +131,13 @@ True
 
 
 **HI**
-```noop
+```haskell
 iga e ks = <Ai : 0 <= i < #ks : ks!i = e>
 ```
 
 **Caso inductivo**
 
-```noop
+```haskell
 iga e (k:ks)
 <Ai : 0 <= i < #(k:ks) : (k:ks)!i = e>
 
@@ -147,7 +147,7 @@ iga e (k:ks)
 
 **d)**
 
-```noop
+```haskell
 cuantos p xs = <Ni : 0<= i < #xs : p xs!!i>
 ```
 
@@ -155,7 +155,7 @@ cuantos p xs = <Ni : 0<= i < #xs : p xs!!i>
 
 **Caso Base**
 
-```noop
+```haskell
 cuantos p [] = <Ni : 0 <= i < #[] : p []!!i>
 
 ={Def de #}
@@ -179,13 +179,13 @@ cuantos p [] = 0
 
 Hipótesis:
 
-```noop
+```haskell
 cuantos p ks = <Ni : 0 <= i < #ks : p ks!!i>
 ```
 
 **Caso inductivo**
 
-```noop
+```haskell
 cuantos p (k:ks) = <Ni : 0 <= i < #(k:ks) : p (k:ks)!!i>
 
 ={Def de cardinal}
@@ -234,13 +234,13 @@ cuantos p (k:ks) = <Ni : 0 <= i < #(k:ks) : p (k:ks)!!i>
 ```
 
 **f)**
-```noop
+```haskell
 busca e xs = <Min i : 0 <= i < #xs && xs!i = e : i>
 ```
 
 ### Derivación por inducción sobre xs
 
-```noop
+```haskell
 busca e [] = <Min i : 0 <= i < #[] && []!i = e : i>
 
 busca e [] = <Min i : False : i>
@@ -250,7 +250,7 @@ busca e [] = 0
 
 **Paso inductivo**
 
-```noop
+```haskell
 busca e (k:ks) = <Min i : 0 <= i < #(k:ks) && (k:ks)!i = e : i>
 
 ={Def de #}
@@ -326,4 +326,260 @@ RESULTADO CON ANÁLISIS POR CASOS
 busca e (k:ks) = ( e = k -> 0
                    e != k -> (busca e ks) + 1
 )
+```
+
+# 4. Derivar las siguientes funciones
+
+### a)
+```haskell
+sum_pot :: Nat -> Nat -> Num
+sum_pot x n = <Sum i : 0 <= i <= n : x^i>
+
+
+-- Caso base
+
+sum_pot x 0 = <Sum i : 0 : x^i>
+
+={rango unitario}
+
+sum_pot x 0 = x^0 = 1
+
+
+-- Caso inductivo
+
+sum_pot x (k+1)
+
+={Spec}
+
+<Sum i : 0 <= i <= (k+1) : x^i>
+
+={Lógica}
+
+<Sum i : 0 = i V 1 <= i <= (k+1) : x^i>
+
+={Partición de rango}
+
+<Sum i : 0 = i : x^i> + <Sum i : 1 <= i <= (k+1) : x^i>
+
+={Rango unitario}
+
+1 + <Sum i : 1 <= i <= (k+1) : x^i>
+
+={Suma y el orden}
+
+1 + <Sum i : 0 <= i-1 <= k : x^i>
+
+={Cambio de variable i-1 -> j}
+
+1 + <Sum j : 0 <= j <= k : x^(j+1)>
+
+={Potenciacion}
+
+1 + <Sum j : 0 <= j <= k : x^j * x>
+
+={Distributividad del producto en la suma}
+
+1 + <Sum j : 0 <= j <= k : x^j > * x
+
+={Hipótesis inductiva}
+
+sum_pot x (k+1) = 1 + (sum_pot x k) * x
+
+
+-- Lectura operacional con x = 2 y n = 2
+
+sum_pot 2 2 = 1 + (sum_pot 2 1) * 2
+
+= 1 + (1 + (sum_pot 2 0) * 2) * 2
+
+= 1 + (1 + 2) * 2
+
+= 7
+```
+
+### b)
+
+
+```haskell
+-- Computa la aproximacion del coseno del segundo argumento.
+
+cos' :: Nat -> Num -> Num
+
+cos' n x = <Sum i : 0 <= i <= n : (-1)^i * x^(2*i) / (2*i)!>
+
+-- Inducción sobre n
+
+-- Caso base
+
+cos' 0 x
+
+<Sum i : i = 0 : (-1)^i * x^(2*i) / (2*i)!>
+
+={Rango unitario}
+
+(-1)^0 * x^(2*0) / (2*0)!
+
+={Aritmetica}
+
+1 * x^(0) / (0)!
+
+={Aritmetica}
+
+1 * 1 / 1
+
+={Aritmetica}
+
+1
+
+
+-- Hipótesis
+
+cos' k x = <Sum i : 0 <= i <= k : (-1)^i * x^(2*i) / (2*i)!>
+
+-- Paso Inductivo
+
+cos' (k+1) x
+
+={Esp}
+
+<Sum i : 0 <= i <= (k+1) : (-1)^i * x^(2*i) / (2*i)!>
+
+={Logica}
+
+<Sum i : 0 <= i <= k V i = k+1 : (-1)^i * x^(2*i) / (2*i)!>
+
+={ Partición de rango }
+
+<Sum i : 0 <= i <= k : (-1)^i * x^(2*i) / (2*i)!> + <Sum i : i = k+1 : (-1)^i * x^(2*i) / (2*i)!>
+
+={H.I}
+
+cos'.k.x + <Sum i : i = k+1 : (-1)^i * x^(2*i) / (2*i)!>
+
+={Rango unitario}
+
+cos'.k.x + (-1)^(k+1) * x^(2*(k+1)) / (2*(k+1))!
+
+={Modularizacion, exp viene del ejercicio 2}
+
+cos'.k.x + exp.(-1).(k+1) * exp.x.(2*(k+1)) / factorial (2*(k+1))
+
+
+-- Derivación de factorial
+
+factorial.x = x!
+
+-- Inducción sobre x
+
+-- Caso base 
+
+factorial.0 = 1
+
+-- Paso inductivo
+
+factorial.(x+1)
+
+={Esp}
+
+(x+1)!
+
+={Matematica}
+
+x! * (x+1)
+
+={H.I}
+
+factorial x * (x+1)
+
+
+-- Resultado de factorial 
+
+factorial.0 = 1
+factorial (x+1) = factorial x * (x+1)
+
+-- Resultado cos'
+
+cos' 0 x = 1
+cos'.(k+1).x = cos'.k.x + exp.(-1).(k+1) * exp.x.(2*(k+1)) / factorial (2*(k+1))
+```
+
+
+
+### c)
+
+```haskell
+cubo x = x^3 
+
+-- Inducción sobre x
+
+-- Caso base
+x = 0
+cubo 0 = 0^3 = 0 
+
+-- Paso inductivo
+
+-- Hipótesis
+cubo k = k^3
+
+-- Caso inductivo
+cubo (k+1)
+
+={esp}
+
+(k+1)^3
+
+={Matematica}
+
+(k+1) * ((k+1) * (k+1))
+
+={Definición de mult}
+
+mult (k+1) (mult (k+1) (k+1))
+
+
+-- Derivación de multiplicacion
+
+mult a b = a * b
+
+-- Inducción sobre a
+-- Caso base
+
+mult 0 b = 0 * b = 0
+
+-- Paso inductivo
+
+mult (k+1) b 
+
+={esp}
+
+(k+1) * b
+
+={Aritmetica}
+
+k * b + b
+
+={H.I}
+
+mult k b + b
+
+
+mult 0 _ = 0
+mult a b = mult (a-1) b + b
+
+
+-- Resultado final
+cubo 0 = 0
+cubo x = mult (x-1) (cubo (x-1))
+```
+
+### c)
+
+```haskell
+cubo x = x^3 
+
+cubo x = x * (x * x)
+
+cubo x = mult x (mult x x)
+
+
 ```

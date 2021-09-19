@@ -80,7 +80,97 @@ busca (Encolada (Docente s) c) y | esCargo y (Docente s) = Just (Docente s)
 
 -- Ejercicio 6 TODO
 
-data ListaAsoc a b = Vacia | Nodo a b ( ListaAsoc a b )
-type Diccionario = ListaAsoc String String
-type Padron = ListaAsoc Int String
+data ListaAsoc a b = Vacia | Nodo a b ( ListaAsoc a b ) deriving Show
+type GuiaTelefonica = ListaAsoc String Int
+
+-- a
+laLong :: ListaAsoc a b -> Int
+
+laLong Vacia = 0
+
+laLong (Nodo x y la) = 1 + laLong la
+
+la_long = laLong
+
+-- b
+laConcat :: ListaAsoc a b -> ListaAsoc a b -> ListaAsoc a b
+
+laConcat Vacia y = y
+laConcat (Nodo a b l) y = Nodo a b (laConcat l y)
+la_concat = laConcat
+
+-- c
+
+laPares :: ListaAsoc a b -> [(a, b)]
+
+laPares Vacia = []
+
+laPares (Nodo a b l) = (a,b) : laPares l
+
+la_pares = laPares
+
+la_busca :: Eq a => ListaAsoc a b -> a -> Maybe b 
+
+laBusca Vacia _ = Nothing
+
+laBusca (Nodo a b l) x = if a==x then Just b else laBusca l x
+
+la_busca = laBusca
+
+la_borrar :: Eq a => a -> ListaAsoc a b -> ListaAsoc a b 
+
+laBorrar _ Vacia = Vacia
+
+laBorrar x (Nodo a b l) | a==x = laBorrar x l 
+                        | otherwise = Nodo a b (laBorrar x l)
+
+la_borrar = laBorrar
+
+testLa = Nodo 1 2 (Nodo 3 4 (Nodo 5 6 Vacia))
+
+
+
+-- Ejercicio 7
+
+data Arbol a = Hoja | Rama (Arbol a) a (Arbol a)
+
+-- Arbol de prueba
+tree = Rama Hoja 3 (Rama (Rama Hoja 5 Hoja) 4 Hoja)
+
+-- a
+
+aLong :: Arbol a -> Int
+
+aLong Hoja = 0
+
+aLong (Rama t1 v t2) = 1 + aLong t1 + aLong t2
+
+a_long = aLong
+
+-- b
+a_hojas :: Arbol a -> Int
+
+aHojas Hoja = 1
+
+aHojas (Rama t1 v t2) = aHojas t1 + aHojas t2
+
+a_hojas = aHojas
+
+-- c
+a_inc :: Num a => Arbol a -> Arbol a
+
+aInc Hoja = Hoja
+
+aInc (Rama t1 v t2) = Rama (aInc t1) (v+1) (aInc t2)
+
+a_inc = aInc
+
+-- d
+a_map :: (a -> b) -> Arbol a -> Arbol b
+
+aMap _ Hoja = Hoja
+
+aMap f (Rama t1 v t2) = Rama (aMap f t1) (f v) (aMap f t2)
+
+a_map = aMap
 
