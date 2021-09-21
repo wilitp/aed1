@@ -572,6 +572,7 @@ cubo 0 = 0
 cubo x = mult (x-1) (cubo (x-1))
 ```
 
+-- Versión sin inducción
 ### c)
 
 ```haskell
@@ -581,5 +582,26 @@ cubo x = x * (x * x)
 
 cubo x = mult x (mult x x)
 
+```
+
+### d)
+```haskell
+prod_suf :: [Num] → Bool
+
+prod_suf.xs = <Ei : 0 < i <= #xs : <Prod j : 0 < j <= #(drop i xs) : (drop i xs)!j > === xs!(j-1) >
+
+-- Asumimos una función prod
+prod_suf.xs = <Ei : 0 < i <= #xs : prod (drop i xs) === xs!(j-1) >
+
+-- Derivamos prod_suf por inducción sobre xs
+
+prod_suf.xs 
+
+={Esp} 
+
+<Ei : 0 < i <= #(k:ks) : prod (drop i (k:ks)) === (k:ks)!(j-1) >
+
+
 
 ```
+

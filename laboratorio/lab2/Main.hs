@@ -1,6 +1,6 @@
 -- Ejercicio 1 y 2
 
-data Carrera = Matematica | Fisica | Computacion | Astronomia deriving (Ord, Eq)
+data Carrera = Matematica | Fisica | Computacion | Astronomia deriving (Ord, Eq, Show)
 
 titulo Computacion = "Licenciatura en Ciencias de la Computacion"
 titulo Matematica = "Licenciatura en Matematica"
@@ -12,13 +12,13 @@ titulo Astronomia = "Licenciatura en Astronomia"
 -- a  
 type Ingreso = Int
 
-data Cargo = Titular | Asociado | Adjunto | Asistente | Auxiliar
-data Area = Administrativa | Ensenanza | Economica | Postgrado
+data Cargo = Titular | Asociado | Adjunto | Asistente | Auxiliar deriving Show
+data Area = Administrativa | Ensenanza | Economica | Postgrado deriving Show
 
 data Persona = Decano
             | Docente Cargo
             | NoDocente Area
-            | Estudiante Carrera Ingreso
+            | Estudiante Carrera Ingreso deriving Show
 
 -- b 
 -- El tipo del constructor docente es Cargo -> Persona
@@ -75,8 +75,11 @@ busca :: Cola -> Cargo -> Maybe Persona
 
 busca VaciaC _ = Nothing
 
-busca (Encolada (Docente s) c) y | esCargo y (Docente s) = Just (Docente s)
+busca (Encolada p c) y | esCargo y p = Just p
                        | otherwise = busca c y
+
+colaPrueba = Encolada Decano (Encolada (Docente Adjunto) VaciaC)
+colaPrueba1 = Encolada Decano (Encolada (Docente Asociado) VaciaC)
 
 -- Ejercicio 6 TODO
 
