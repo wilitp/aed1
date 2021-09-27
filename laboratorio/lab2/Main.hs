@@ -60,16 +60,20 @@ primerElemento (x:xs) = Just x
 
 -- Ejercicio 5
 
-data Cola = VaciaC | Encolada Persona Cola
+data Cola = VaciaC | Encolada Persona Cola deriving Show
 
+-- a
 atender :: Cola -> Maybe Cola
 
 atender VaciaC = Nothing
 atender (Encolada p c) = Just c
 
+-- b
 encolar :: Persona -> Cola -> Cola
 
-encolar = Encolada
+encolar p VaciaC = Encolada p VaciaC
+
+encolar p (Encolada a c) = Encolada a (encolar p c)
 
 busca :: Cola -> Cargo -> Maybe Persona
 
@@ -78,7 +82,7 @@ busca VaciaC _ = Nothing
 busca (Encolada p c) y | esCargo y p = Just p
                        | otherwise = busca c y
 
-colaPrueba = Encolada Decano (Encolada (Docente Adjunto) VaciaC)
+colaPrueba = Encolada Decano (Encolada (Docente Adjunto) (Encolada Decano VaciaC))
 colaPrueba1 = Encolada Decano (Encolada (Docente Asociado) VaciaC)
 
 -- Ejercicio 6 TODO
@@ -171,7 +175,7 @@ a_inc = aInc
 -- d
 a_map :: (a -> b) -> Arbol a -> Arbol b
 
-aMap _ Hoja = Hoja
+-- aMap _ Hoja = Hoja
 
 aMap f (Rama t1 v t2) = Rama (aMap f t1) (f v) (aMap f t2)
 

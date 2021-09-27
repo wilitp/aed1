@@ -595,11 +595,202 @@ prod_suf.xs = <Ei : 0 < i <= #xs : prod (drop i xs) === xs!(j-1) >
 
 -- Derivamos prod_suf por inducción sobre xs
 
-prod_suf.xs 
+-- Caso base
+prod_suf.[]
+
+={Esp}
+
+prod_suf.[] = <Ei : 0 < i <= #[] : prod (drop i []) === []!(j-1) >
+
+={ Cardinal + logica}
+
+<Ei : False : prod (drop i []) === []!(j-1) >
+
+={ Rango vacio }
+
+False
+
+-- Caso inductivo
+
+prod_suf.(k:ks)
 
 ={Esp} 
 
-<Ei : 0 < i <= #(k:ks) : prod (drop i (k:ks)) === (k:ks)!(j-1) >
+<Ei : 0 < i <= #(k:ks) : prod (drop i (k:ks)) === (k:ks)!(i-1) >
+
+={Cardinal + Logica}
+
+<Ei : i = 1 V  1 < i <= 1 + #ks : prod (drop i (k:ks)) === (k:ks)!(i-1) >
+
+={Particion de rango}
+
+<Ei : i = 1 : prod (drop i (k:ks)) === (k:ks)!(i-1) > V <Ei : 1 < i <= 1 + #ks : prod (drop i (k:ks)) === (k:ks)!(i-1) >
+
+={ Rango unitario + drop + indice}
+
+(prod ks === k) V <Ei : 1 < i <= 1 + #ks : prod (drop i (k:ks)) === (k:ks)!(i-1) >
+
+={ Suma y orden }
+
+(prod ks === k) V <Ei : 0 < i-1 <= #ks : prod (drop i (k:ks)) === (k:ks)!(i-1) >
+
+={ Cambio de variable i -> j+1}
+
+(prod ks === k) V <Ei : 0 < j <= #ks : prod (drop (j+1) (k:ks)) === (k:ks)!j) >
+
+={ drop }
+
+(prod ks === k) V <Ei : 0 < j <= #ks : prod (drop j ks) === (k:ks)!j) >
+
+={ Indexacion de lista no vacia e indice mayor a 0 }
+
+(prod ks === k) V <Ei : 0 < j <= #ks : prod (drop j ks) === ks!(j-1)) >
+
+={Hipotesis}
+
+(prod ks === k) V prod_suf.(ks)
+
+```
+
+# 5 
+
+### a) Iguales: ve que todos los elementos de una lista sean iguales a los de otra 
+
+**ESTA MAL, ABAJO LO HAGO BIEN**
+Yo entendí que había que comparar dos listas, no todos los elementos de una sola lista
+
+```haskell
+iguales :: Eq a => [a] -> [a] -> Bool
+
+iguales xs ys = <Ai : 0 <= i < #xs : xs!!i = ys!!i >
+
+-- Lo resolvemos por induccion sobre xs
+
+-- Caso base
+iguales [] ys 
+
+={Esp}
+
+<Ai : 0 <= i < #([]) : []!!i = ys!!i >
+
+={Cardina, logica y rango vacio}
+
+iguales [] ys = True
+
+
+-- Caso inductivo
+iguales (k:ks) ys
+
+={Esp}
+
+<Ai : 0 <= i < #(k:ks) : (k:ks)!!i = ys!!i >
+
+={Logica y particion de rango}
+
+<Ai : i = 0 : (k:ks)!!i = ys!!i > /\ <Ai : 1 <= i < #(k:ks) : (k:ks)!!i = ys!!i >
+
+={Rango unitario y leibniz , definicion de cardinal y suma y orden}
+
+k = ys!!0 /\ <Ai : 0 <= i-1 < #ks : (k:ks)!!i = ys!!i >
+
+={Cambio de variable i -> j+1}
+
+k = ys!!0 /\ <Ai : 0 <= j < #ks : (k:ks)!!(j+1) = ys!!(j+1) >
+
+={ys = y:tys, propiedad de indice}
+
+k = ys!!0 /\ <Ai : 0 <= j < #ks : ks!!j = tys!!j >
+
+={H.I}
+
+k = ys!!0 /\ iguales xs tys
+
+
+
+```
+
+### a) Iguales: ve que todos los elementos de una lista sean iguales a los de otra
+
+```haskell
+iguales :: Eq a => [a] -> [a] -> Bool
+
+iguales xs = <Ai : 0 < i < #xs : xs!!(i-1) == xs!!i>
+
+-- Derivamos por induccion
+-- Caso base
+iguales [] = <Ai : 0 < i < #[] : []!!(i-1) == []!!i>
+
+True
+
+-- Caso inductivo
+
+iguales (k:ks)
+
+={Esp}
+
+<Ai : 0 < i < #(k:ks) : (k:ks)!!(i-1) == (k:ks)!!i>
+
+={Logica, particion de rango, leibniz}
+
+<Ai : i = 1 : (k:ks)!!(0) == (k:ks)!!1> /\ <Ai : 1 < i < #(k:ks) : (k:ks)!!(i-1) == (k:ks)!!i>
+
+={Rango unitario, indice}
+
+k == ks!!0 /\ <Ai : 1 < i < #(k:ks) : (k:ks)!!(i-1) == (k:ks)!!i>
+
+={Cardinal, suma y orden}
+
+k == ks!!0 /\ <Ai : 0 < i-1 < #ks : (k:ks)!!(i-1) == (k:ks)!!i>
+
+={Cambio de variable i -> j+1}
+
+k == ks!!0 /\ <Ai : 0 < j < #ks : (k:ks)!!(j) == (k:ks)!!(j+1)>
+
+={Indexacion}
+
+k == ks!!0 /\ <Ai : 0 < j < #ks : ks!!(j-1) == ks!!j>
+
+={H.I}
+
+k == ks!!0 /\ iguales ks
+
+-- Resultado
+
+iguales (x:xs) = x == xs!!0 /\ iguales xs
+
+iguales [] = True
+```
+
+### b) minimo calcula el minimo valor en una lista no vacia de enteros
+
+```haskell
+
+minimo :: [Int] -> Int
+minimo xs = <Min i : 0<= x < #xs : xs!!i>
+
+-- Induccion
+-- Caso base
+minimo [x] = <Min i : 0 <= x < #[x] : ([x])!!i>
+
+={Cardinal, logica, rango unitario}
+
+minimo [x] = x
+
+-- Caso inductivo
+
+minimo (k:ks)
+
+={Esp}
+
+<Min i : 0<= x < #(k:ks) : (k:ks)!!i>
+
+={Logica y particion de rango, rango unitario, leibniz}
+
+k min <Min i : 1 <= x < #(k:ks) : (k:ks)!!i>
+
+={}
+
+
 
 
 
