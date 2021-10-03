@@ -503,8 +503,6 @@ cos' 0 x = 1
 cos'.(k+1).x = cos'.k.x + exp.(-1).(k+1) * exp.x.(2*(k+1)) / factorial (2*(k+1))
 ```
 
-
-
 ### c)
 
 ```haskell

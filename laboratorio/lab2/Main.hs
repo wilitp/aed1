@@ -135,8 +135,6 @@ la_borrar = laBorrar
 
 testLa = Nodo 1 2 (Nodo 3 4 (Nodo 5 6 Vacia))
 
-
-
 -- Ejercicio 7
 
 data Arbol a = Hoja | Rama (Arbol a) a (Arbol a)
