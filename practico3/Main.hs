@@ -16,3 +16,8 @@ esCuadGen n m = (n*n*(1/4) == n+m) || esCuadGen (n-1) (m+1)
 
 esCuad n = esCuadGen n 0
 
+
+suman :: [Int] -> Int -> Int
+suman [] _ = 0
+suman (k:ks) m | k == m = 1 + suman ks (m-k)
+               | otherwise = suman ks (m-k)

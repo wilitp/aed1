@@ -281,7 +281,7 @@ esCuad n = esCuadGen n 0
 -- b) Cuenta la cantidad de prefijos que suman Ocho
 sumanOcho :: -> [Num] -> Nat
 
-sumanOcho xs = <Ni : 0 <= i < #xs : xs!i = sum(take i xs)>
+sumanOcho xs = <Ni : 0 <= i < #xs :sum(take i xs) = 8>
 
 -- Derivacion por induccion
 
@@ -289,17 +289,96 @@ sumanOcho xs = <Ni : 0 <= i < #xs : xs!i = sum(take i xs)>
 
 sumanOcho [] =
 
-<Ni : 0 <= i < #[] : []!i = sum(take i [])>
+<Ni : 0 <= i < #[] : 8 = sum(take i [])>
 
 ={Sum, Take}
 
-<Ni : 0 <= i < #[] : []!i = 0>
+<Ni : 0 <= i < #[] : 8 = 0>
 
 ={Rango Vacio del conteo}
 
-0
+sumanOcho [] = 0
+
+-- Caso inductivo
+
+sumanOcho (k:ks) = <Ni : 0 <= i < #(k:ks) : 8 = sum(take i (k:ks))>
+
+={Division de siempre}
+
+<Ni : i = 0 : 8 = sum(take i (k:ks))> + <Ni : 1 <= i < #(k:ks) : 8 = sum(take i (k:ks))>
+
+={Cardinal + suma y orden}
+
+<Ni : i = 0 : (k:ks)!i = sum(take i (k:ks))> + <Ni : 0 <= i-1 < #ks : 8 = sum(take i (k:ks))>
+
+={Rango unitario y analisis por casos}
+
+( k = 8 -> 1
+  k != 8 -> 0 ) + <Ni : 0 <= i-1 < #ks : 8 = sum(take i (k:ks))>
+
+={Cambio de variable}
+
+( k = 8 -> 1
+  k != 8 -> 0 ) + <Ni : 0 <= i < #ks : 8 = sum(take i+1 (k:ks))>
+
+={Take, sum}
+
+( k = 8 -> 1
+  k != 8 -> 0 ) + <Ni : 0 <= i < #ks : 8-k = sum(take i ks)>
+
+={Generalizo}
+
+sumanOchoGen xs m = <Ni : 0 <= i < #xs :sum(take i xs) = 8 + m>
+
+-- Caso base
+
+sumanOcho [] =
+
+<Ni : 0 <= i < #[] : 8+m = sum(take i [])>
+
+={Sum, Take}
+
+<Ni : 0 <= i < #[] : 8+m = 0>
+
+={Rango Vacio del conteo}
+
+sumanOcho [] = 0
+
+-- Caso inductivo
+
+sumanOcho (k:ks) = <Ni : 0 <= i < #(k:ks) : 8+m = sum(take i (k:ks))>
+
+={Division de siempre}
+
+<Ni : i = 0 : 8+m = sum(take i (k:ks))> + <Ni : 1 <= i < #(k:ks) : 8+m = sum(take i (k:ks))>
+
+={Cardinal + suma y orden}
+
+<Ni : i = 0 : 8+m = sum(take i (k:ks))> + <Ni : 0 <= i-1 < #ks : 8+m = sum(take i (k:ks))>
+
+={Rango unitario}
+
+(8+m = k -> 1
+ 8+m /= k -> 0) + <Ni : 0 <= i-1 < #ks : 8+m = sum(take i (k:ks))>
+
+={Cambio de variable}
+
+(8+m = k -> 1
+ 8+m /= k -> 0) + <Ni : 0 <= i < #ks : 8+m = sum(take i+1 (k:ks))>
+
+={Take, Sum}
+
+(8+m = k -> 1
+ 8+m /= k -> 0) + <Ni : 0 <= i < #ks : 8+m-k = sum(take i ks)>
+
+={H.I}
+
+(8+m = k -> 1
+ 8+m /= k -> 0) + sumanOchoGen ks (m-k)
 
 ```
+
+# 3
 
 
 
