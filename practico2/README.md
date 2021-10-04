@@ -788,9 +788,55 @@ k min <Min i : 1 <= x < #(k:ks) : (k:ks)!!i>
 
 ={}
 
-
-
-
-
 ```
+
+### d) prod :: [Num] -> [Num] -> Num calcula el producto escalar entre dos vectores. Si son de longitud distinta, opera con la longitud de la lista mas chica.
+
+```haskell
+prod.xs.ys = <Sum i: 0 <= i < #xs && 0 <= i < #ys : xs!i * ys!i >
+
+-- Resolvemos por induccion sobre ambas listas
+
+-- Caso base: Alguna de las listas es vacia
+-- Esta prueba vale para ambas listas, ya que queda rango vacio en ambos casos
+
+prod.xs.[] = <Sum i: 0 <= i < #xs && 0 <= i < #[] : xs!i * ys!i >
+
+={Logica}
+
+prod.xs.[] = <Sum i: False : xs!i * ys!i >
+
+={Rango vacio}
+
+prod.xs.[] = 0
+
+-- Caso inductivo: las listas son ambas no vacias
+
+prod.(x|>xs).(y|>ys) = <Sum i: 0 <= i < #(x|>xs) && 0 <= i < #(y|>ys) : (x|>xs)!i * (y|>ys)!i >
+
+={Logica}
+
+<Sum i: i = 0 V (1 <= i < #(x|>xs) && 1 <= i < #(y|>ys)) : (x|>xs)!i * (y|>ys)!i >
+
+={Particion de rango}
+
+<Sum i : i = 0 : (x|>xs)!i * (y|>ys)!i > + <Sum i: i = 0 V (1 <= i < #(x|>xs) && 1 <= i < #(y|>ys)) : (x|>xs)!i * (y|>ys)!i>
+
+={Rango unitario}
+
+x * y + <Sum i: 1 <= i < #(x|>xs) && 1 <= i < #(y|>ys) : (x|>xs)!i * (y|>ys)!i>
+
+={Cardinal, suma y orden}
+
+x * y + <Sum i: 0 <= i-1 < #xs && 0 <= i-1 < #ys : (x|>xs)!i * (y|>ys)!i>
+
+={Cambio de variable i -> i+1, indexacion}
+
+x * y + <Sum i: 0 <= i < #xs && 0 <= i < #ys : xs!i * ys!i>
+
+={Hipótesis}
+
+x * y + prod.xs.ys
+```
+
 

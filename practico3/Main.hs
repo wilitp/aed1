@@ -21,3 +21,9 @@ suman :: [Int] -> Int -> Int
 suman [] _ = 0
 suman (k:ks) m | k == m = 1 + suman ks (m-k)
                | otherwise = suman ks (m-k)
+               
+prefijo [] ys = True
+prefijo xs [] = False
+
+prefijo (x:xs) (y:ys) = if x == y then prefijo xs ys else False
+
