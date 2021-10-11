@@ -601,7 +601,7 @@ prefijo xs (y:ys) V seg xs ys
 
 ```haskell
 eco: String → Bool
-eco.xs = <E as, bs : xs = as ++ bs /\ as 6= [] : as = bs >
+eco.xs = <E as, bs : xs = as ++ bs /\ as != [] : as = bs >
 ```
 
 **Calcular el rango para xs =“frufru”; luego decidir si eco.“frufru”.**
@@ -618,25 +618,102 @@ eco.xs = <E as, bs : xs = as ++ bs /\ as 6= [] : as = bs >
 
 ```haskell
 semiEco: String → Bool
-semiEco.xs = <E as, bs, cs : xs = as++bs++cs : eco.as.bs >
+semiEco.xs = <E as, bs, cs : xs = as++bs++cs : eco.as++bs >
 
 -- Derivacion por induccion
 -- Caso base
-semiEco.[] = <E as, bs, cs : [] = as++bs++cs : eco.as.bs >
+semiEco.[] = <E as, bs, cs : [] = as++bs++cs : eco.as++bs >
 
 ={Rango constante}
 
-semiEco.[] = <E as, bs, cs : False : eco.as.bs >
+semiEco.[] = <E as, bs, cs : False : eco.as++bs >
 
 -- Caso inductivo
 semiEco.(x:xs) 
 
 ={Esp}
 
-<E as, bs, cs : (x:xs) = as++bs++cs : eco.as.bs >
+<E as, bs, cs : (x:xs) = as++bs++cs : eco.as++bs >
 
 ={Casos disjuntos as =? []}
 
-<E as, bs, cs : (x:xs) = as++bs++cs : eco.as.bs > V <E as, bs, cs : (x:xs) = as++bs++cs : eco.as.bs >
+<E as, bs, cs : (x:xs) = []++bs++cs : eco.[]++bs > V <E as, bs, cs : (x:xs) = as++bs++cs : eco.as++bs >
+
+={Listas, eliminacion de variables, cambio de variable}
+
+<E bs, cs : (x:xs) = bs++cs : eco.bs > V <E a, as', bs, cs : (x:xs) = (a:as')++bs++cs : eco.(a:as')++bs >
+
+={Listas, eliminacion de variable}
+
+<E bs, cs : (x:xs) = bs++cs : eco.bs > V <E as', bs, cs : xs = as'++bs++cs : eco.(x:as')++bs >
+
+={Listas}
+
+<E bs, cs : (x:xs) = bs++cs : eco.bs > V <E as', bs, cs : xs = as'++bs++cs : eco.(x++as')++bs >
+
+-- Tengo que generalizar
+-- Especificacion general
+
+semiEcoG.xs.ks = <E as, bs, cs : xs = as++bs++cs : eco.ks++as++bs >
+
+-- Derivacion por induccion
+-- Caso base
+semiEcoG.[].ks = <E as, bs, cs : [] = as++bs++cs : eco.ks++as++bs >
+
+={Rango unitario}
+
+semiEcoG.[].ks = eco.ks
+
+
+-- Caso inductivo
+semiEcoG.(x:xs).ks
+
+={Esp}
+
+<E as, bs, cs : (x:xs) = as++bs++cs : eco.ks++as++bs >
+
+={Casos disjuntos as =? []}
+
+<E as, bs, cs : as=[] /\ (x:xs) = []++bs++cs : eco.ks++[]++bs > V <E as, bs, cs : (x:xs) = as++bs++cs : eco.ks++as++bs >
+
+={Listas, eliminacion de variables, cambio de variable}
+
+<E bs, cs : (x:xs) = bs++cs : eco.ks++bs > V <E a, as', bs, cs : (x:xs) = (a:as')++bs++cs : eco.ks++(a:as')++bs >
+
+={Listas, eliminacion de variable}
+
+<E bs, cs : (x:xs) = bs++cs : eco.ks++bs > V <E as', bs, cs : xs = as'++bs++cs : eco.ks++(x:as')++bs >
+
+={Listas}
+
+<E bs, cs : (x:xs) = bs++cs : eco.ks++bs > V <E as', bs, cs : xs = as'++bs++cs : eco.(ks++[x])++as'++bs >
+
+={H.I}
+
+<E bs, cs : (x:xs) = bs++cs : eco.ks++bs > V semiEcoG.xs.(ks++[x])
+
+={Particion de rango en bs ?= []}
+
+<E cs : (x:xs) = cs : eco.ks > V <E b, bs, cs : (x:xs) = (b:bs)++cs : eco.ks++(b:bs) > V semiEcoG.xs.(ks++[x])
+
+={Eliminacion de b}
+
+<E cs : (x:xs) = cs : eco.ks > V <E bs, cs : xs = bs++cs : eco.ks++[x]++bs > V semiEcoG.xs.(ks++[x])
+
+={Rango unitario}
+
+eco.ks V <E bs, cs : xs = bs++cs : eco.ks++[x]++bs > V semiEcoG.xs.(ks++[x])
+
+={Cambio de variable}
+
+eco.ks V <E as, bs, cs : xs = as++bs++cs : eco.ks++[x]++as++bs > V semiEcoG.xs.(ks++[x])
+
+={H.I}
+
+eco.ks V semiEcoG.xs.(ks++[x]) V semiEcoG.xs.(ks++[x])
+
+={Idempotencia}
+
+semiEcoGen.(x:xs).ks = eco.ks V semiEcoG.xs.(ks++[x])
 
 ```
