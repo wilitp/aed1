@@ -1,13 +1,13 @@
 CC=gcc
 CFLAGS = -std=c99 -Wall -Wextra
 DIR = ej
-DIRS := $(wildcard $(DIR)*)
-OUTPUT := $(patsubst $(DIR)%, $(DIR)%.output, $(DIRS))
+DIRS := $(wildcard $(DIR)*[!output]) # ej1 ej2 ej3 ej4 ...
+OUTPUT := $(patsubst $(DIR)%, $(DIR)%.output, $(DIRS)) # ej1.output ej2.output ej3.output ...
 
-all: $(OUTPUT)
+all: clean $(OUTPUT) # clean ej1.output ej2.output ...
 
 $(DIR)%.output: ;
-	$(CC) -o $@ $(subst .output,"", $@)/main.c
+	$(CC) -o $@ $(subst .output,"", $@)/main.c tools/tools.c
 
 clean:
-	rm **.output
+	rm -f **.output
