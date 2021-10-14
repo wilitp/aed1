@@ -1,6 +1,3 @@
-#include <stdio.h>
-
-int main(void)
-{
-  printf("%s", "Hola xd\n");
+int main() {
+  return 0;
 }
