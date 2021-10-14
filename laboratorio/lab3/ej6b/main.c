@@ -26,7 +26,7 @@ int main(void)
     m = z;
   }
 
-  printf("%d", m);
+  imprimeEntero(m);
 
   return 0;
 }

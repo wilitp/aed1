@@ -1,14 +1,12 @@
 #include <stdio.h>
+#include "../tools/tools.h"
 
 int main(void)
 {
   int x, y, z;
-  printf("Ingrese un valor para x");
-  scanf("%d", &x);
-  printf("Ingrese un valor para y");
-  scanf("%d", &y);
-  printf("Ingrese un valor para z");
-  scanf("%d", &z);
+  x = pedirEntero();
+  y = pedirEntero();
+  z = pedirEntero();
 
   // Imprimir los valores
   printf("x+y+1=%d\n",x+y+1);

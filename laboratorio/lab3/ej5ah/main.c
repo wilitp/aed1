@@ -1,9 +1,10 @@
 #include <stdio.h>
+#include "../tools/tools.h"
 
-int main(void) {
+int main(void)
+{
   int i;
-  printf("Ingresar un valor");
-  scanf("%d", &i);
+  i = pedirEntero();
   while (i != 0) {
     i = i - 1;
   }

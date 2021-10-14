@@ -1,13 +1,12 @@
 #include <stdio.h>
 #include <assert.h>
+#include "../tools/tools.h"
 
 // 1.b
 int main() {
   int x, y;
-  printf("Ingresar un valor");
-  scanf("%d", &x);
-  printf("Ingresar un valor");
-  scanf("%d", &y);
+  x = pedirEntero();
+  y = pedirEntero();
   assert(x==2 && y==5);
   x = x + y;
   y = y + y;

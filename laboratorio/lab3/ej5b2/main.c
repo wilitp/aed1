@@ -1,17 +1,15 @@
 #include <stdio.h>
 #include <stdbool.h>
+#include "../tools/tools.h"
 
 int main(void)
 {
   int x, i, temp;
   bool res;
 
-  printf("Ingresar valor");
-  scanf("%d", &x);
-  printf("Ingresar valor");
-  scanf("%d", &i);
-  printf("Ingresar valor");
-  scanf("%d", &temp);
+  x = pedirEntero();
+  i = pedirEntero();
+  temp = pedirEntero();
   res = temp;
 
   i = 2;

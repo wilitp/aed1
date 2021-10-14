@@ -1,12 +1,11 @@
 #include <stdio.h>
 #include <assert.h>
+#include "../tools/tools.h"
 
 // 1.a
 int main() {
   int x;
-  printf("Ingresar un valor");
-  scanf("%d", &x);
-  assert(x==1);
+  x = pedirEntero();
   x = 5;
   return 0;
 }
