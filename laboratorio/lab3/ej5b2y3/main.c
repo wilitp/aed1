@@ -23,3 +23,13 @@ int main(void)
   }
   return 0;
 }
+
+/* Primera iteracion: (x->5, y->3, res->1) */
+/* Segunda iteracion: (x->5, y->4, res->1) */
+/* Tercera iteracion: (x->5, y->5, res->1) */
+
+
+/* Ejercicio 5.b.2 */
+
+/* - El programa 1 computa el cociente de la division entera entre x e y. */
+/* - El programa 2 evalua si x es primo, el valor de res es la respuesta. */

@@ -1,6 +1,17 @@
 #include <stdio.h>
 #include <assert.h>
-#include "../tools/tools.h"
+
+int pedirEntero(void) 
+{
+  int x;
+  printf("Ingresar un numero");
+  scanf("%d", &x);
+  return x;
+}
+
+void imprimeEntero(int x) {
+  printf("%d\n", x);
+}
 
 // 1.c
 int main() {
