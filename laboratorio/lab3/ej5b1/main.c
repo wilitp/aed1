@@ -15,5 +15,6 @@ int main(void)
     x = x-y;
     i=i+1;
   }
+  printf("x=%d, y=%d, i=%d", x, y, i);
   return 0;
 }

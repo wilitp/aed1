@@ -10,6 +10,7 @@ int main() {
   assert(x==2 && y==5);
   x = x + y;
   y = y + y;
+  printf("x=%d; y=%d", x, y);
 
   return 0;
 }

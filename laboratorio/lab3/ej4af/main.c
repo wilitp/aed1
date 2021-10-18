@@ -14,4 +14,5 @@ int main(void) {
   {
     x = 2;
   }
+  printf("x=%d; y=%d", x, y);
 }

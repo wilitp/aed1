@@ -7,4 +7,5 @@ int main(void) {
   while (i != 0) {
     i = 0;
   }
+  imprimeEntero(i);
 }

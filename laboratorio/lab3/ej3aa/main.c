@@ -6,6 +6,8 @@
 int main() {
   int x;
   x = pedirEntero();
+  assert(x==1);
   x = 5;
+  imprimeEntero(x);
   return 0;
 }

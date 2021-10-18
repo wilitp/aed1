@@ -8,4 +8,5 @@ int main(void)
   while (i != 0) {
     i = i - 1;
   }
+  printf("i=%d", i);
 }
