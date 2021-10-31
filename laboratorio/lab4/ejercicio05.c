@@ -11,8 +11,8 @@ int pedirEntero(void)
 
 void pedirArreglo(int a[], int n_max)
 {
-  printf("xd\n");
   int i = 0;
+  printf("Ingrese los elementos enteros de un arreglo:\n");
   while(i < n_max ) {
     a[i] = pedirEntero();
     i++;

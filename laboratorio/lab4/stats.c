@@ -17,7 +17,7 @@ float pedirEntero(void)
 
 void pedirArreglo(float a[], int n_max)
 {
-  printf("Ingrese los elementos enteros de un arreglo:\n");
+  printf("Ingrese los elementos reales de un arreglo:\n");
   int i = 0;
   while(i < n_max ) {
     a[i] = pedirEntero();
