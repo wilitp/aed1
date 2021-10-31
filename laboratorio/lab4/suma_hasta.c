@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <assert.h>
 
 int pedirEntero(void) 
 {
@@ -31,6 +32,7 @@ int suma_hasta_gauss(int n)
 int main(void)
 {
   int x = pedirEntero();
+  assert(x >= 0);
   printf("Suma: %d\n", suma_hasta(x));
   printf("Suma gauss: %d\n", suma_hasta_gauss(x));
 }
