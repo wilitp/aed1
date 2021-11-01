@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdbool.h>
 #include <assert.h>
-#define N 1
+#define N 0
 
 int pedirEntero(void) 
 {
