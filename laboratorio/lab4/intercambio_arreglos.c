@@ -40,15 +40,13 @@ void intercambiar(int a[], int tam, int i, int j)
 
 void pedirIndice(int *i)
 {
-  while(1)
+  printf("Seleccionar un indice (Cantidad de elementos: %d)\n", N);
+  scanf("%d", i);
+  while((*i >= N || 0 > *i))
   {
+    printf("El indice debe ser valido!\n");
     printf("Seleccionar un indice (Cantidad de elementos: %d)\n", N);
     scanf("%d", i);
-    if(*i < N && 0 <= *i)
-    {
-      break;
-    }
-    printf("El indice debe ser valido!\n");
   }
 }
 

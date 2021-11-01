@@ -36,11 +36,7 @@ bool existe_positivo(int a[], int tam)
   int i = 0;
   while(i<tam)
   {
-    if(a[i] >= 0)
-    {
-      res = true;
-      break;
-    }
+    res = res || (a[i] >= 0);
     i++;
   }
 
@@ -53,11 +49,7 @@ bool todos_positivos(int a[], int tam)
   int i = 0;
   while(i<tam)
   {
-    if(a[i] < 0)
-    {
-      res = false;
-      break;
-    }
+    res = res && (a[i] >= 0);
     i++;
   }
 
@@ -70,15 +62,13 @@ int main(void)
   int opt;
   pedirArreglo(arr, N);
 
-  while(true)
+  printf("Seleccionar funcion:\n  1.existe_positivo\n  2.todos_positivos\n");
+  scanf("%d", &opt);
+  while(opt != 1 && opt != 2)
   {
+    printf("La seleccion debe ser entre 1 y 2!");
     printf("Seleccionar funcion:\n  1.existe_positivo\n  2.todos_positivos\n");
     scanf("%d", &opt);
-    if(opt == 1 || opt == 2)
-    {
-      break;
-    }
-    printf("La seleccion debe ser entre 1 y 2!");
   }
 
   if(opt == 1)
