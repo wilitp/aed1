@@ -243,7 +243,7 @@ if
 fi
 {r = x min y /\ (r = x V r = y)}
 
-Es facil ver que las guardas b1 y b2 deben ser los dos casos de la precondicion
+Probamos con b1 y b2 siendo los dos casos de la precondicion
 
 {x <= y V x > y}
 if
