@@ -234,7 +234,60 @@ Nuestro programa es valido entonces si, y solo si,
 
 (x<=y /\ R = x) V (x>y /\ R=y)
 
+El valor de la expresion R va a depender de orden entre x e y. Introducimos un condicional y cambiamos R por otras 2 metavariables
 
+{x <= y V x > y}
+if
+ b1 -> r := R1
+ b2 -> r := R2
+fi
+{r = x min y /\ (r = x V r = y)}
+
+Es facil ver que las guardas b1 y b2 deben ser los dos casos de la precondicion
+
+{x <= y V x > y}
+if
+ x <= y -> r := R1
+ x > y -> r := R2
+fi
+{r = x min y /\ (r = x V r = y)}
+
+Averigüemos cuales son los valores de R1 y R2, recordemos que estos pueden ser x o y
+
+Nuestro programa es valido si y solo si:
+
+True => wp.if..fi.Q
+
+={True implica cualquier cosa verdadera}
+
+wp.if..fi.Q
+
+={Definicion de wp y tricotomia}
+
+(x<=y => wp.(r:=R1).Q) /\ (x>y => wp.(r:=R2).Q)
+
+={Definicion de wp}
+
+(x<=y => {R1 = x min y /\ (R1 = x V R1 = y)}) /\ (x>y => {R2 = x min y /\ (R2 = x V R2 = y)})
+
+={Uso las hipotesis de orden entre x e y}
+
+(x<=y => {R1 = x /\ (R1 = x V R1 = y)}) /\ (x>y => {R2 = y /\ (R2 = x V R2 = y)})
+
+={Leibniz e idempotencia de /\ (En el caso x = y, tenemos R1 = x === R1 =y. En ese caso aplicariamos idempotencia del V y tendriamos el mismo resultado)}
+
+(x<=y => {R1 = x}) /\ (x>y => {R2 = y})
+
+Tenemos entonces:
+R1 = x
+R2 = y 
+
+{x <= y V x > y}
+if
+ x <= y -> r := x
+ x > y -> r := y
+fi
+{r = x min y /\ (r = x V r = y)}
 
 ```
 b) Calcular el valor absoluto de un número. 
