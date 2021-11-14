@@ -51,6 +51,45 @@ wp.(if..fi).(x!=1) = (x >= 1) => wp.(x:=x+1).(x!=1) /\ (x <= 1) => wp.(x:=x-1).(
 La pre implica la wp(True => True).
 ```
 
+### b)
+```haskell
+{P : x != y}
+if x>y -> skip
+   x<y -> x,y := y,x
+fi
+{Q : x > y}
+```
+
+#### Obligacion de prueba
+```haskell
+-- Probemos:
+Terna === (P => x>y V x<y) /\ (P /\ x>y => Q) /\ (P /\ x<y => wp.(x,y := y,x).Q)
+
+Terna === True /\ (P /\ x>y => Q) /\ (P /\ x<y => wp.(x,y := y,x).Q)
+
+Terna === (x != y /\ x>y => Q) /\ (P /\ x<y => wp.(x,y := y,x).Q)
+
+Terna === (x > y V x < y /\ x>y  => Q) /\ (P /\ x<y => wp.(x,y := y,x).Q)
+
+Terna === (x > y V (x < y /\ False)  => Q) /\ (P /\ x<y => wp.(x,y := y,x).Q)
+
+Terna === (x > y  => Q) /\ (P /\ x<y => wp.(x,y := y,x).Q)
+
+Terna === (P /\ x<y => wp.(x,y := y,x).Q)
+
+Terna === (P /\ x<y => x<y)
+
+Terna === (x!=y /\ x<y => x<y)
+
+Terna === ((x>y /\ False) V x<y => x<y)
+
+Terna === (x<y => x<y)
+
+Terna === True
+
+```
+
+
 # 3) Para cada uno de los siguientes programas, elija valores para las expresiones E y F de modo que las ternas de Hoare sean correctas.
 
 ```haskell
@@ -97,13 +136,13 @@ La terna es válida si y sólo si:
 
 !(q=a*c /\ w=c^2) V {E = ac + w}
 
-={Hipotesis del programa}
+={Propongo E = ac + w}
 
-False V {E = ac + w}
+!(q=a*c /\ w=c^2) V True
 
-={Neutro}
+={Absorvente}
 
-E = ac + w
+True
 ```
 
 ```haskell
@@ -223,7 +262,7 @@ Podemos reforzar nuestra post-condición y a su vez aclarar nuestra pre-condicio
 S
 {r = x min y /\ (r = x V r = y)}
 
-Vamos a necesitar hacer una asignacion(r)
+Vamos a necesitar hacer una asignacion(r) para asegurar que tenga el valor requerido.
 
 {x <= y V x > y}
 r := R
@@ -279,9 +318,15 @@ wp.if..fi.Q
 
 (x<=y => {R1 = x}) /\ (x>y => {R2 = y})
 
-Tenemos entonces:
+Proponemos entonces:
 R1 = x
 R2 = y 
+
+(x<=y => True) /\ (x>y => True)
+
+={bla}
+
+True
 
 {x <= y V x > y}
 if
@@ -403,31 +448,62 @@ b)
  fi
 {Q}
 
-Demostremos que:
 
-(P => (B0 V B1) /\ (B0 => S0.Q) /\ (B1 => S1.Q)) => (P => (B0 V !B0) /\ (B0 => S0.Q) /\ (!B0 => S1.Q))
+-- Como hip tenemos:
+(P => B0 V B1) /\ {P/\B0}S0{Q} /\ {P/\B1}S1{Q}
 
-Tomando P y (P => (B0 V B1) /\ (B0 => S0.Q) /\ (B1 => S1.Q)) como premisas:
+Probemos
 
-(P => (B0 V !B0) /\ (B0 => S0.Q) /\ (!B0 => S1.Q))
+(P => B0 V !B0) /\ {P/\B0}S0{Q} /\ {P/\!B0}S1{Q}
 
-={Tercero excluido}
+={Tercero exc}
 
-(P => (B0 => S0.Q) /\ (!B0 => S1.Q))
+{P/\B0}S0{Q} /\ {P/\!B0}S1{Q}
 
-={Ya vimos que P => (B0 => S0.Q)}
+={Hip}
 
-(P => (!B0 => S1.Q))
+True /\ {P/\!B0}S1{Q}
 
-={Logica}
+={Neutro}
 
-P /\ !B0 => S1.Q
+{P/\!B0}S1{Q}
 
-={!B0 => B1(!B0 es mas fuerte que B1)}
-={{P /\ B1}S1{Q} => {P /\ !B0}S1{Q} -- Propiedad de las precondiciones }
-={{P /\ B1}S1{Q} es premisa}
+={Veamos que ((P/\!B0) /\ (P => B0 V B1)) => (P/\B1)}
+
+(P/\!B0) /\ (P => B0 V B1) => (P/\B1)
+
+={Carac}
+
+!((P/\!B0) /\ !P V B0 V B1) V (P/\B1)
+
+={Morgan}
+
+!(P/\!B0) V (P /\ !B0 /\ !B1) V (P/\B1)
+
+={Morgan}
+
+(!P V B0) V (P /\ !B0 /\ !B1) V (P /\ B1)
+
+={Distributiva}
+
+((!P V B0 V P) /\ (!P V B0 V !B0) /\ (!p V B0 V !B1)) V (P /\ B1)
+
+={Tercero Exc, abs del V y neutro del /\}
+
+(!P V B0 V !B1) V (P /\ B1)
+
+={Distributiva}
+
+(!P V B0 V !B1 V P /\ !P V B0 V !B1 V B1)
+
+={Tercero Exc, abs del V y neutro del /\}
 
 True
+
+={Entonces {P/\B1}S1{Q} => {P/\!B0}S1{Q} }
+
+El programa es valido.
+
 
 
 ```
@@ -621,4 +697,29 @@ True
  od
  res := x
 {res = mdc.x.y}
+```
+
+# 10. Considere las siguientes definiciones recursivas de la funcion de exponenciacion exp.x.y:
+
+```haskell
+-- a)
+exp.x.y | y == 0 = 1
+        | y != 0 = x*(exp x (y-1)
+
+exp.x.y | y == 0 = 1
+        | y != 0 /\ y mod 2 == 0 = exp (x*x) (y/2)
+        | y != 0 /\ y mod 2 == 1 = x*(exp x (y-1)
+```
+
+Utilice la siguiente especificacion e invariante
+```haskell
+-- Espec
+Const X, Y : Int;
+Var x, y, r : Int;
+{x = X /\ y = Y /\ x >= 0 /\ y >= 0}
+S
+{r = X^Y}
+
+-- Invariante
+{I : y >= 0 /\ }
 ```
