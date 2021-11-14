@@ -89,6 +89,99 @@ Terna === True
 
 ```
 
+#### f)
+```haskell
+{True}
+  r := N;
+  do r != 0 ->
+    if r < 0 -> r := r + 1
+       r > 0 -> r := r − 1
+    fi
+  od
+{r = 0}
+
+={
+  Propongo:
+    I = {|r| <= N}
+}
+
+{True}
+  r := N;
+  {|r| >= N}
+  do r != 0 ->
+    if r < 0 -> r := r + 1
+       r > 0 -> r := r − 1
+    fi
+  od
+  {|r| >=N}
+{r = 0}
+
+={
+  Probamos {True}r:=N{|r| >= N}
+}
+
+True => {|N| >= N}
+
+True
+
+={
+  Probamos que I /\ r=0 => r=0
+  Es trivial
+}
+
+-- Hasta ahora tenemos:
+--   - El invariante
+--   - Sabemos que I /\ !b => Q
+
+-- Propongo la cota t = |r|
+
+={
+  Ahora probemos
+  {I /\ b /\ t = K}
+    if r < 0 -> r := r + 1
+       r > 0 -> r := r − 1
+    fi
+  {I /\ t < K}
+}
+
+{|r| <= N /\ r!=0 /\ |r| = K}
+  if r < 0 -> r := r + 1
+     r > 0 -> r := r − 1
+  fi
+{|r| <= N /\ t < K}
+
+-- Usamos la obligacion de prueba
+
+1. (|r| <= N /\ r!=0 /\ |r| = K) => r<0 V r>0
+
+  -- r!=0, entonces r<0 V r>0
+
+2. {(|r| <= N /\ r!=0 /\ |r| = K) /\ r < 0} r := r + 1{|r| <= N /\ t < K}
+  
+  (|r| <= N /\ r!=0 /\ |r| = K /\ r < 0)
+   => 
+  |r + 1| <= N /\ |r+1| < K
+
+  -- Sabemos que r<0 y que |r| <= N, entonces sabemos que |r+1| < |r| = K <= N 
+  -- Sabemos en particular que |r+1| < N
+  -- Tambien sabemos |r+1| < K
+
+
+3. {(|r| <= N /\ r!=0 /\ |r| = K) /\ r > 0} r := r − 1{|r| <= N /\ t < K}
+
+  (|r| <= N /\ r!=0 /\ |r| = K /\ r > 0)
+   => 
+  |r-1| <= N /\ |r-1| < K
+
+  -- Sabemos que r>0 y que |r| <= N, entonces sabemos que |r-1| < |r| = K <= N 
+  -- Sabemos en particular que |r-1| < N
+  -- Tambien sabemos |r-1| < K
+
+```
+
+El cuerpo del bucle es valido y sabemos que el programa termina.
+
+El programa es valido.
 
 # 3) Para cada uno de los siguientes programas, elija valores para las expresiones E y F de modo que las ternas de Hoare sean correctas.
 

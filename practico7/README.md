@@ -326,6 +326,7 @@ od
 {x^3+x <= N /\ <A i : 0<=i<=x : i^3+i <= N> /\ <A i : x<i<=N : i^3+i > N>}
 ```
 
+# 4. Especificar y derivar un programa que, dado un arreglo de enteros, determine si los elementos del arreglo están ordenados de manera creciente.
 
 
 # 5. Especificar y derivar un programa que, dados dos arreglos de enteros A y B del mismo tamaño N, calcule el producto punto entre los elementos de ambos arreglos.
