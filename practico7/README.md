@@ -328,6 +328,219 @@ od
 
 # 4. Especificar y derivar un programa que, dado un arreglo de enteros, determine si los elementos del arreglo están ordenados de manera creciente.
 
+Intuyo el programa
+```haskell
+Const A : array[0, N) of Num;
+Var i : Int, r : Bool;
+{True}
+i := 0;
+r := True;
+do i<N-1 ->
+  r = r && A.i < A.(i+1);
+  i = i+1
+od
+{r = <Ai : 0<=i<N-1 : A.i < A.(i+1) >}
+```
+
+Especificacion
+```haskell
+Const A : array[0, N) of Num;
+r : Bool;
+{True}
+S
+{r = <Aj : 0<=j<N-1 : A.j < A.(j+1) >}
+```
+
+Este programa va a tener que recorrer un arreglo, asi que introduzco un ciclo y una variable i que inicializo desde 0 porque es la primera posicion de nuestro arreglo. Voy a usar i para indexar.
+
+```haskell
+Const A : array[0, N) of Num;
+Var r : Bool, i : I;
+{True}
+i = 0;
+do b ->
+  S
+od
+{r = <Aj : 0<=j<N-1 : A.j < A.(j+1) >}
+```
+Propongo el invariante `0<=i<=N-1 /\ r = <Aj : 0<=j<i : A.j < A.(j+1) >`
+
+Para conseguirlo pense en los valores que va a tomar i para recorrer el arreglo y tambien use la postcondicion reemplazando la constante N-1 por i
+
+Probemos para encontrar el valor inicial de r:
+
+```haskell
+{True}
+i = 0;
+r = R;
+{0<=i<=N-1 /\ r = <Aj : 0<=j<i : A.j < A.(j+1)>}
+
+-- Obligacion de prueba
+True => 0<=0<N-1 /\ r = <Aj : 0<=j<0 : A.j < A.(j+1)>
+
+0<=N-1 /\ r = <Aj : 0<=j<0 : A.j < A.(j+1)>
+
+0<=N-1 /\ r = <Aj : 0<=j<0 : A.j < A.(j+1)>
+-- N es un natural mayor a 0
+
+r = <Aj : 0<=j<0 : A.j < A.(j+1)>
+
+-- Rango vacio del para todo
+
+r = True
+```
+
+Hasta ahora tenemos:
+
+```haskell
+Const A : array[0, N) of Num;
+Var r : Bool, i : I;
+{True}
+i = 0;
+r = True;
+do b ->
+  S
+od
+{r = <Aj : 0<=j<N-1 : A.j < A.(j+1) >}
+```
+
+Busquemos una b tal que `I /\ !b => Q`
+
+```haskell
+(0<=i<N-1 /\ r = <Aj : 0<=j<i : A.j < A.(j+1)>) /\ !b
+=> 
+(r = <Aj : 0<=j<N-1 : A.j < A.(j+1) >)
+
+-- Proponemos !b === i>=N-1 
+
+(0<=i<=N-1 /\ r = <Aj : 0<=j<i : A.j < A.(j+1)>) /\ i>=N-1
+=> 
+(r = <Aj : 0<=j<N-1 : A.j < A.(j+1)>)
+
+-- i<=N-1 /\ i>=N-1 === i=N-1
+
+r = <Aj : 0<=j<N-1 : A.j < A.(j+1)> 
+=> 
+(r = <Aj : 0<=j<N-1 : A.j < A.(j+1) >)
+
+-- p => p
+
+True
+```
+
+Hasta ahora tenemos
+
+```haskell
+Const A : array[0, N) of Num;
+Var r : Bool, i : I;
+{True}
+i = 0;
+r = True;
+do i<N-1 ->
+  S
+od
+{r = <Aj : 0<=j<N-1 : A.j < A.(j+1) >}
+```
+Ahora queda encontrar una cota t tq t>=0
+
+Propongo `t = (N-1)-i`
+
+Sabemos que N>=1, y sabemos que i=0 en la inicializacion.
+Tenemos entonces que t>=0.
+
+Derivemos ahora el cuerpo del ciclo:
+
+```haskell
+{0<=i<=N-1 /\ r = <Aj : 0<=j<i : A.j < A.(j+1)> /\ i<N-1 /\ (N-1)-i=K}
+S
+{0<=i<=N-1 /\ r = <Aj : 0<=j<i : A.j < A.(j+1)> /\ (N-1)-i>K}
+```
+
+Vemos que el cuerpo del ciclo va a tener que hacer una asignacion a i para que la cota decrezca.
+
+```haskell
+{0<=i<=N-1 /\ r = <Aj : 0<=j<i : A.j < A.(j+1)> /\ i<N-1 /\ (N-1)-i=K}
+i:=E
+{0<=i<=N-1 /\ r = <Aj : 0<=j<i : A.j < A.(j+1)> /\ (N-1)-i>K}
+```
+
+Ya que asignamos un nuevo valor a i, entonces quizas tengamos que asignarle un valor a r para mantener el invariante.
+
+```haskell
+{0<=i<=N-1 /\ r = <Aj : 0<=j<i : A.j < A.(j+1)> /\ i<N-1 /\ (N-1)-i=K}
+r, i:=R, E
+{0<=i<=N-1 /\ r = <Aj : 0<=j<i : A.j < A.(j+1)> /\ (N-1)-i>K}
+```
+
+Usamos la obligacion de prueba
+```haskell
+(0<=i<=N-1 /\ r = <Aj : 0<=j<i : A.j < A.(j+1)> /\ i<N-1 /\ (N-1)-i=K) 
+=> 
+(0<=R<=N-1 /\ R = <Aj : 0<=j<E : A.j < A.(j+1)> /\ (N-1)-E>K)
+
+-- Def de K
+
+(0<=i<=N-1 /\ r = <Aj : 0<=j<i : A.j < A.(j+1)> /\ i<N-1 /\ (N-1)-i=K) 
+=> 
+(0<=R<=N-1 /\ R = <Aj : 0<=j<E : A.j < A.(j+1)> /\ (N-1)-E<(N-1)-i)
+
+-- Propongo E=i+1 para que la cota decrezca
+
+(0<=i<=N-1 /\ r = <Aj : 0<=j<i : A.j < A.(j+1)> /\ i<N-1 /\ (N-1)-i=K) 
+=> 
+(0<=R<=N-1 /\ R = <Aj : 0<=j<E : A.j < A.(j+1)> /\ (N-1)-i-1<(N-1)-i)
+
+-- Aritmetica
+
+(0<=i<=N-1 /\ r = <Aj : 0<=j<i : A.j < A.(j+1)> /\ i<N-1 /\ (N-1)-i=K) 
+=> 
+(0<=R<=N-1 /\ R = <Aj : 0<=j<E : A.j < A.(j+1)> /\ N-1<N)
+
+-- N es natural
+
+(0<=i<=N-1 /\ r = <Aj : 0<=j<i : A.j < A.(j+1)> /\ i<N-1 /\ (N-1)-i=K) 
+=> 
+(0<=(i+1)<=N-1 /\ R = <Aj : 0<=j<i+1 : A.j < A.(j+1)>)
+
+-- Particion de rango y qcy
+
+(0<=i<=N-1 /\ r = <Aj : 0<=j<i : A.j < A.(j+1)> /\ i<N-1 /\ (N-1)-i=K) 
+=> 
+(0<=(i+1)<=N-1 /\ R = A.(i+1) < A.(i+2) && r)
+
+-- Propongo R = R = A.(i+1) < A.(i+2)
+
+(0<=i<=N-1 /\ r = <Aj : 0<=j<i : A.j < A.(j+1)> /\ i<N-1 /\ (N-1)-i=K) 
+=> 
+(0<=(i+1)<=N-1)
+
+-- Sabemos que i<i+1
+
+(0<=i<=N-1 /\ r = <Aj : 0<=j<i : A.j < A.(j+1)> /\ i<N-1 /\ (N-1)-i=K) 
+=> 
+(i+1<=N-1)
+
+-- Sabemos que i<N-1
+
+(0<=i<=N-1 /\ r = <Aj : 0<=j<i : A.j < A.(j+1)> /\ i<N-1 /\ (N-1)-i=K) 
+=> 
+True
+```
+
+Finalmente tenemos:
+
+```haskell
+Const A : array[0, N) of Num;
+Var r : Bool, i : I;
+{True}
+i = 0;
+r = True;
+do i<N-1 ->
+  i = i+1;
+  r = A.(i+1) < A.(i+2) && r
+od
+{r = <Aj : 0<=j<N-1 : A.j < A.(j+1) >}
+```
 
 # 5. Especificar y derivar un programa que, dados dos arreglos de enteros A y B del mismo tamaño N, calcule el producto punto entre los elementos de ambos arreglos.
 
@@ -344,5 +557,111 @@ Entonces la especificacion de nuestro programa es:
 Var a: Array[0,N)
 Var b: Array[0,N)
 S
-{res = <Sum i : 0 <= i < N : a[i] * b[i]>}
+{res = <Sum j : 0 <= j < N : a[j] * b[j]>}
+```
+
+Vamos a necesitar un ciclo, ya que hay que recorrer los arreglos. Introducimos una variable i para usar cómo índice.
+Esta variable la inicializamos en 0, que es el primer indice.
+Tambien tenemos que inicializar res.
+```
+Var a: Array[0,N)
+Var b: Array[0,N)
+{True}
+i:=0;
+r:=R;
+do b ->
+  S
+od
+{res = <Sum j : 0 <= j < N : a[j] * b[j]>}
+```
+
+Planteo un invariante a partir de la postcondicion:
+
+```haskell
+{I : 0<=i<=N /\ res = <Sum j : 0 <= j < i : a[j] * b[j]>}
+```
+
+Veamos que se cumpla el invariante luego de la inicializacion
+
+```haskell
+{True}
+i, res :=0, R;
+{I : 0<=i<=N /\ res = <Sum j : 0 <= j < i : a[j] * b[j]>}
+
+-- Obligacion de prueba
+
+True 
+=>
+(I : 0<=0<=N /\ R = <Sum j : 0 <= j < 0 : a[j] * b[j]>)
+
+-- Sabemos que N >=0
+
+(R = <Sum j : 0 <= j < 0 : a[j] * b[j]>)
+
+-- Rango vacio de Sum
+
+(R = 0)
+
+-- Propongo R=0
+
+True
+```
+
+Hasta ahora tenemos:
+
+```
+Var a: Array[0,N)
+Var b: Array[0,N)
+{True}
+i:=0;
+r:=0;
+do b ->
+  S
+od
+{res = <Sum j : 0 <= j < N : a[j] * b[j]>}
+```
+Ahora busquemos una guarda b tal que I /\ !b => Q
+
+```haskell
+0<=i<=N /\ res = <Sum j : 0 <= j < i : a[j] * b[j]> /\ !b 
+=> 
+res = <Sum j : 0 <= j < N : a[j] * b[j]>
+
+-- si i fuera N, esto quedaria probado
+-- Propongo b = i<N
+
+0<=i<=N /\ res = <Sum j : 0 <= j < i : a[j] * b[j]> /\ i>=N 
+=> 
+res = <Sum j : 0 <= j < N : a[j] * b[j]>
+
+-- 0<=i<=N /\ i>=N === 0<=i=N 
+
+res = <Sum j : 0 <= j < N : a[j] * b[j]>
+=> 
+res = <Sum j : 0 <= j < N : a[j] * b[j]>
+
+True
+```
+
+```haskell
+Var a: Array[0,N)
+Var b: Array[0,N)
+{True}
+i:=0;
+r:=0;
+do i<N ->
+  S
+od
+{res = <Sum j : 0 <= j < N : a[j] * b[j]>}
+```
+
+Ahora buscamos una cota t tq t>=0 
+Propongo N-i
+
+Queda derivar el cuerpo del bucle
+
+```haskell
+{0<=i<=N /\ res = <Sum j : 0 <= j < i : a[j] * b[j]> /\ i<N /\ N-i=T}
+S
+{0<=i<=N /\ res = <Sum j : 0 <= j < i : a[j] * b[j]> /\ N-i<T}
 ```
