@@ -94,9 +94,33 @@ fib 0 = 1
 fib 1 = 1
 fib n = fib (n - 1) + fib (n - 2)
 
+esPrimo :: Int -> Bool
+esPrimo n = any (\x -> rem n x == 0) potencialesDivisores
+  where
+    potencialesDivisores = [2 .. ((round . sqrt) root)]
+    root = fromIntegral n
+
 -- Observacion: si n es fib(i), entonces i <= n
 -- Entonces [1..n] me da el espacio de busqueda
 esFib n = any ((== n) . fib) [1 .. n]
 
 todosFib :: [Int] -> Bool
 todosFib = all esFib
+
+-- Laboratorio 10
+-- definicion recursiva:
+-- todosPorDos [] = []
+-- todosPorDos (x:xs) = 2*x : todosPorDos xs
+todosPorDos = map (* 2)
+
+-- Laboratorio 11
+
+filterPrimos = filter esPrimo
+
+-- Laboratorio 12
+
+primIgualesA :: (Eq a) => a -> [a] -> [a]
+-- De derecha a izquierda, ver cual es el segmento mas grande de elementos iguales a n
+-- Si un elemento no es igual a n, 'resetteamos' el acumulador a []
+-- primIgualesA n = foldr (\x acc -> if x == n then x : acc else []) []
+primIgualesA n = takeWhile (== n)
