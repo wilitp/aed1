@@ -95,10 +95,7 @@ fib 1 = 1
 fib n = fib (n - 1) + fib (n - 2)
 
 esPrimo :: Int -> Bool
-esPrimo n = any (\x -> rem n x == 0) potencialesDivisores
-  where
-    potencialesDivisores = [2 .. ((round . sqrt) root)]
-    root = fromIntegral n
+esPrimo n = all (\x -> rem n x /= 0) [2 .. (round . sqrt . fromIntegral $ n)]
 
 -- Observacion: si n es fib(i), entonces i <= n
 -- Entonces [1..n] me da el espacio de busqueda
